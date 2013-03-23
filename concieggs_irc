@@ -1,6 +1,6 @@
 #!/bin/sh
 
-trap 'kill $(jobs -p) 2>/dev/null' EXIT # Kill all children when we quit.
+trap 'echo kill $(jobs -p)' EXIT
 
 dir=$(dirname $0)
 cfg=$dir/concieggs.conf
@@ -9,6 +9,7 @@ cfg=$dir/concieggs.conf
 irc () {
 # Connect to Bitlbee.
     ii -s irc.freenode.net -i $irc_dir -n $irc_username -f $irc_realname &
+    echo ii pid: $!
 
 # Wait for connection to stabilize...
     sleep 10
@@ -27,4 +28,6 @@ irc () {
     wait $!
 }
 
-while true; do irc; done
+while true; do irc; done &
+
+./concieggs
