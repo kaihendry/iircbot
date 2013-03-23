@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+# Ophøj en bruger til mester.  Kun for logemestre!
+
+
+
+if [ $# -lt 1 ]; then
+    echo 'Brug: ophøj <person> [kommentar]'
+    exit 0
+fi
+
+auth="$(isTrusted "$EGGS_USER")"
+if ! [ "$auth" ]; then
+    echo "$EGGS_USER: Det har du på ingen måde bemyndigelse til."
+    exit
+fi
+
+who=$(authedName $1)
+
+if ! [ "$who" ]; then
+    echo "$EGGS_USER: Umuligt; $1 er ikke noteret i Nickserv-protokollen."
+    exit
+fi
+
+if [ "$(isTrusted "$1")" ]; then
+    echo "$EGGS_USER: $who er allerede en af vor respekterede logemestre."
+    exit
+fi
+
+if gitRefresh; then
+    shift
+    if [ $# -eq 0 ]; then
+        echo "$who" >> $CONCIEGGS_DB_DIR/mestre
+    else
+        echo "$who # $*" >> $CONCIEGGS_DB_DIR/mestre
+    fi
+    if tryGitChange "Ophøj $who til mester" $CONCIEGGS_DB_DIR/mestre; then
+        echo "Ritualet er fuldendt.  $who regnes nu blandt mestrene udi frokostens kunst."
+    else
+        gitRepair $CONCIEGGS_DB_DIR/mestre
+        echo "Katastrofe!  Noget gik galt under opdatering!"
+        exit 1
+    fi
+else
+    exit 1
+fi

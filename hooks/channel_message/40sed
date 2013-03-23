@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set -f
+
+if echo "$EGGS_BODY" | egrep 'arse' > /dev/null; then
+    who="$(echo "$EGGS_BODY" | cut -d ':' -f 1)"
+    EGGS_BODY="$(echo "$EGGS_BODY" | cut -d ' ' -f 2-)"
+else
+    who="$EGGS_USER"
+fi
+
+
+echo $who: why you say $EGGS_BODY

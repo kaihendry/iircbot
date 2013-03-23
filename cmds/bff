@@ -1,0 +1,21 @@
+#!/bin/sh
+# Find dine BFFs
+
+
+if [ $# -eq 1 ]; then
+    user="$1"
+elif [ $# -eq 0 ]; then
+    user="$EGGS_USER"
+else
+    echo "Brug: bff <navn>"
+    exit
+fi
+
+n="$(eggstool eggsmates "$user")"
+
+if [ "$n" ]; then
+    echo "$n"
+else
+    echo "$user spiser altid alene"
+
+fi

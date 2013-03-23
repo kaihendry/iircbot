@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+# Foretag en søgning i concieggs' omfattende hukommelse efter detaljer
+# omkring et givent emne.
+
+
+lookup() {
+     cat $CONCIEGGS_DB_DIR/fakta | sort -V | grep -F -i "$*"
+}
+
+if [ "$*" ]; then
+    if ! lookup "$*"; then
+        echo "Jeg ved ikke noget om $*."
+    fi
+else
+    echo "Men hvad skal jeg forklare?"
+fi 

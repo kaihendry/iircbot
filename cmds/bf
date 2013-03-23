@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# Afvikl første argument som et Brainfuck-program, med de resterende
+# argumenter som inddata.
+
+
+if [ $# -lt 1 ]; then
+    echo "Brug: bf <program>"
+else
+    prog="$1"
+    shift
+fi
+echo "$prog" | $EGGS_LIB_DIR/eggsbf "$*" | cat -v

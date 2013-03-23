@@ -1,0 +1,36 @@
+#!/bin/sh
+#
+# Meld dig til at spise med på et givent tidspunkt, der angives som et
+# klokkeslet.  Tidspunktet kan aldrig være mere end 24 timer fremme
+# eller tilbage.  Tidspunkter i fortiden angives ved at præfikse dem
+# med en bindestreg.  Således kan du derfor kun melde dig til spisning
+# i dag, i morgen eller i går.
+
+
+subscribeToEggs() {
+    time=$1
+    name=$2
+    if [ "$(dateSecs "$time" '+%u')" = "5" ]; then
+        echo "Det er en fredag!  Der er muligvis FF!"
+    fi
+    if [ "$(isInEggs "$time" "$name")" != "" ]; then
+        echo "$name spiser allerede med til $(titleEggs $time)!"
+    elif addToEggs "$time" "$name"; then
+        echo "$(ack)  $name spiser med til $(titleEggs $time)!  $(nag $name)"
+    else
+        exit 1
+    fi
+}
+
+time=$(extractDate "$@")
+name=$(extractUsername "$@")
+if [ ! "$time" ]; then
+    echo "Ingen har tilmeldt sig Eggs - \
+vil du være den første, så brug 'eggsml <tidspunkt> [brugernavn]'."
+    exit 0
+fi
+if [ ! "$name" ]; then
+    echo "Giv mig et navn jeg kender!"
+    exit 0
+fi
+subscribeToEggs "$time" "$name"

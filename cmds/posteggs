@@ -1,0 +1,36 @@
+#!/bin/sh
+#
+# Bogfør den sidst udførte Eggs ved at indtaste alle de medspisende i
+# frokostdatabasen og skubbe den til Github.  Hvis der er konflikter
+# skal disse ordnes manuelt (øv!).
+# Alle argumenter til posteggs gemmes som kommentarer i slashdotfrokost
+
+
+lastEggs=$(prevEggs | head -n 1)
+
+if [ ! "$lastEggs" ]; then
+    echo "Ingen Eggs mangler bogføring!"
+else
+    if gitRefresh; then
+        cd $EGGS_DIR
+        ed slashdotfrokost > /dev/null <<EOF
+/::MÅLTIDSDATA::/
++1
+i
+$(formatEggs $lastEggs $*)
+.
+w
+EOF
+        if tryGitChange "Eggs $(timeToDate $lastEggs), med $(describeEggs $lastEggs)" slashdotfrokost; then
+            echo "Succes!  Eggs $(timeToDate $lastEggs), med $(describeEggs $lastEggs) er nu bogført".
+            setTopic
+            rm $CONCIEGGS_DB_DIR/eggs/$lastEggs
+        else
+            gitRepair slashdotfrokost
+            echo "Katastrofe!  Noget gik galt under opdatering!"
+            exit 1
+        fi
+    else
+        exit 1
+    fi
+fi

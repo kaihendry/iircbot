@@ -1,0 +1,37 @@
+#!/bin/sh
+
+prog=$(cat <<"EOF"
+function frobword_inner(s) {
+  fst = substr(s,1,1)
+  prefix = toupper(fst) == fst ? "Jule-" : "jule-"
+  if (length(s) > 3 && rand() > 0.1) {
+    return frobword_inner(prefix s)
+  } else {
+    return s
+  }
+}
+function frobword(s) {
+  if (match(s, "[jJ]ul") != 1 && rand() > 0.25) {
+    return frobword_inner(s)
+  } else {
+    return s
+  }
+}
+function frob(s) {
+  match(s, "[a-zA-ZæøåÆØÅ]+")
+  if (RSTART == 0) {
+    return s
+  } else {
+    pre=substr(s,1,RSTART-1)
+    post=substr(s,RSTART+RLENGTH,length(s))
+    return pre frobword(substr(s,RSTART,RLENGTH)) frob(post)
+  }
+}
+{
+print frob($0)
+fflush(); 
+}
+EOF
+)
+
+awk -- "$prog"

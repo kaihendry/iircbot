@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+# Skift den brugerbestemte del af topic
+
+
+if [ -n "$1" ]; then
+    echo "$@" | dbWrite topic
+fi
+
+setTopic

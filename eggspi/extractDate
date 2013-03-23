@@ -1,0 +1,11 @@
+#!/bin/sh
+
+while [ $# -ge 1 ]; do
+    time=$(dateToTime $1)
+    if [ "$time" ]; then
+        echo $time
+        exit
+    fi
+    shift
+done
+checkNextEggs

@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# Udskriv alle overståede Eggs der endnu ikke er blevet bogført.
+
+
+prev=$(prevEggs)
+if [ "$prev" != "" ]; then
+    prevEggs | while read eggs; do eggsplain $eggs; done
+else
+    echo "Alle Eggs er blevet bogført!"
+fi

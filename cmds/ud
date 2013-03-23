@@ -1,0 +1,59 @@
+#!/usr/bin/env ruby
+# Encoding: UTF-8
+# Foretag en søgning på Urban Dictionary.
+# Er sidste tegn et heltal vil dette blive brugt til at bestemme antal resultater
+
+require 'open-uri'
+require 'uri'
+
+class String
+    def is_i?
+       !!(self =~ /^[-+]?[0-9]+$/)
+    end
+end
+
+if ARGV.length < 1
+  puts "Jeg ved ikke hvad jeg skal søge på"
+  exit(-1)
+end
+
+max_output = 3
+
+if ARGV[-1].is_i? 
+  max_output = ARGV.pop.to_i
+end
+
+term = ARGV.join(" ")
+page = URI.encode("http://www.urbandictionary.com/define.php?term=#{term}")
+
+results = []
+
+begin
+  open(page) do |doc|
+    doc.each_line do |l|
+       results << l.scan(/div class="definition">(.*?)<\/div/)
+    end
+  end
+rescue
+  puts "Fejl ved forespørgsel til Urban Dictionary"
+  exit(-1)
+end
+
+results.flatten!
+
+if results.empty?
+  puts "Fandt ingenting..." 
+else
+  begin
+    results.each_with_index do |result, i|
+      result.gsub!(/&quot;/, '"')
+      result.gsub!(/\r/, '')
+      result.gsub!(/<[^>]*>/, '')
+
+      puts result.chomp unless i >= max_output
+      sleep 1
+    end
+  rescue
+    puts "Fejl ved udskrivelse af resultat"
+  end
+end

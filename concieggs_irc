@@ -1,0 +1,30 @@
+#!/bin/sh
+
+trap 'kill $(jobs -p) 2>/dev/null' EXIT # Kill all children when we quit.
+
+dir=$(dirname $0)
+cfg=$dir/concieggs.conf
+. $cfg
+
+irc () {
+# Connect to Bitlbee.
+    ii -s irc.freenode.net -i $irc_dir -n $irc_username -f $irc_realname &
+
+# Wait for connection to stabilize...
+    sleep 10
+
+# Enter the directory containing the IRC stuff.
+    cd $irc_dir'/irc.freenode.net'
+
+    sleep 2
+
+# Now join!
+    echo "/j $irc_channel" > in
+    echo "/j $irc_error_channel" > in
+    echo "$irc_username connected!"
+
+# Wait for ii to die.
+    wait $!
+}
+
+while true; do irc; done

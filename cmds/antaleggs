@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# Informér logen om hvor mange gange den angivne broder har spist med
+# til eggs
+
+
+if [ $# -eq 1 ]; then
+    user="$1"
+elif [ $# -eq 0 ]; then
+    user="$EGGS_USER"
+else
+    echo "Brug: antaleggs [navn]"
+    exit
+fi
+
+if [ $EGGS_USER = svip ]; then
+    echo "Vent venligst, du tæller..."
+else
+    echo "Vent venligst, Brainfuck tæller..."
+fi
+
+n="$(eggstool eggscount "$user")"
+
+if [ "$n" ]; then
+    echo "$(randomName "$user") har spist med til eggs $n gange."
+else
+    echo "$user har mig bekendt aldrig spist med."
+fi

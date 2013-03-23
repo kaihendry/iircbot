@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# Udskriv alle kommende Eggs med tilmeldte deltagere.
+
+
+next=$(nextEggs)
+if [ "$next" != "" ]; then
+    nextEggs | while read eggs; do eggsplain $eggs; done
+else
+    echo "Ingen har tilmeldt sig eggs!"
+fi

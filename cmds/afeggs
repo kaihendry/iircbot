@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# Afmeld den givne Eggs.  Kun eggs der endnu ikke er afholdt kan
+# afmeldes - bordet fanger!
+
+
+unsubscribeFromEggs() {
+    time=$1
+    name=$2
+    gut=$(isInEggs "$time" "$name")
+    if [ "$gut" = "" ]; then
+        echo "Men $name spiser jo alligevel ikke med $(timeToDate $time)!"
+    elif rmFromEggs "$time" "$gut"; then
+        echo "$(ack)  $name spiser ikke længere med $(timeToDate $time)!"
+    else
+        exit 1
+    fi
+}
+
+time=$(extractDate "$@")
+name=$(extractUsername "$@")
+if [ ! "$time" ]; then
+    echo "Angiv et gyldigt tidspunkt!"
+    exit 0
+fi
+if [ ! "$name" ]; then
+    echo "Angiv et kendt navn!"
+    exit 0
+fi
+unsubscribeFromEggs "$time" "$name"

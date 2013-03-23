@@ -1,0 +1,4 @@
+#!/bin/sh
+
+
+ls $CONCIEGGS_DIR/cmds | enumerate

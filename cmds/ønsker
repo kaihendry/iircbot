@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# Udskriv en liste over de nuværende indkøbsønsker
+
+
+wishes=$(eggstool wishes \
+    | sort \
+    | uniq -c \
+    | sed -e 's/ *1 //' -e 's/ *//' \
+    | enumerate)
+
+if [ "$wishes" ]; then
+    echo "Indkøbsønsker: $wishes."
+else
+    echo "Bred ymer!  Der er ingen indkøbsønsker!"
+fi

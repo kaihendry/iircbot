@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# Tilføj til listen over indkøbsønsker.  Kun katalogmuligheder tillades!
+
+
+eval "$(echo "$@" | parse 'det (?<usual>sædvanlige)( for (?<who>.*))?|(?<what>.*)')"
+if [ "$usual" ]; then
+    if [ "$who" ]; then
+        who=$(randomName $4)
+    else
+        who=$(randomName $EGGS_USER)
+    fi
+    if ! [ "$who" ]; then
+        echo "Jeg kender ikke til nogen '$4'"
+    fi
+    did=$(for x in $(dbUserIterate "$who" "preferences/food"); do
+        $CONCIEGGS_DIR/cmds/unsafePerformRåønsk $(dbRead "$x") > /dev/null
+        dbRead "$x"
+    done | enumerate)
+    if ! [ "$did" ]; then
+        echo "$who har ingen særlige indkøbspræferencer"
+    else
+        echo "$(ack)  Der er nu ønsket $did."
+    fi
+elif [ "$what" ]; then
+    there="$(checkCatalogue "$what")"
+    if ! [ "$there" ]; then
+        echo "$EGGS_USER: '$@' er ikke i kataloget.  Prøv min 'katalog'-kommando for at se hvad der er af muligheder, eller brug 'kanoniser' til at tilføje en ny."
+        exit
+    fi
+    $CONCIEGGS_DIR/cmds/unsafePerformRåønsk "$there"
+else
+    echo "Brug: ønsk <ØNSKE...|det sædvanlige [til NAVN]>"
+fi

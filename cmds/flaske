@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# Snur flasken rundt og find ud af noget!
+
+
+if [ $# = 0 ]; then
+    who="$(tail -n 200 out|grep "<[^>]*>"|sed -r 's/.*<([^>]*)>.*/\1/'|sort|uniq|fgrep -vx "$CONCIEGGS_NAME")"
+else
+    who="$(for x in $*; do echo $x; done)"
+fi
+
+echo "$(ack)  Jeg sætter flasken i gang!"
+sleep 3
+iter=0
+while true; do
+    last="$(echo "$who"|randomise|head -n 1)"
+    iter=$(expr $iter + 1)
+    echo "Flasken drejer videre til $last!"
+    sleep 5
+    if [ $iter -gt 2 -a "$(printf '\n\n\n\n\nstop' | randomise)" = "stop" ]; then
+        break;
+    fi
+done
+echo "Flasken stopper!  Flaskehalsen peger på $last!"

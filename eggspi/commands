@@ -1,0 +1,9 @@
+#!/bin/sh
+
+cmddir=$CONCIEGGS_DIR/cmds
+
+ls $cmddir | while read -r cmd; do
+    if [ -x "$cmddir/$cmd" ] && [ -f "$cmddir/$cmd" ]; then
+        echo "$cmd"
+    fi
+done

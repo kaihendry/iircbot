@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd $EGGS_DIR
+(git reset HEAD "$@" && git checkout "$@") > /dev/null
