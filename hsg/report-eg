@@ -1,0 +1,23 @@
+
+Starting Nmap 6.25 ( http://nmap.org ) at 2013-04-01 22:28 SGT
+Nmap scan report for 192.168.1.1
+Host is up (0.0042s latency).
+MAC Address: C0:3F:0E:0F:8B:84 (Netgear)
+Nmap scan report for 192.168.1.3
+Host is up.
+Nmap scan report for 192.168.1.4
+Host is up (0.10s latency).
+MAC Address: 70:56:81:A7:E0:B5 (Unknown)
+Nmap scan report for 192.168.1.110
+Host is up (0.098s latency).
+MAC Address: E4:CE:8F:0F:63:1E (Apple)
+Nmap scan report for 192.168.1.114
+Host is up (0.090s latency).
+MAC Address: 60:C5:47:0A:44:A4 (Apple)
+Nmap scan report for 192.168.1.137
+Host is up (0.0042s latency).
+MAC Address: 00:21:86:96:38:FB (Universal Global Scientific Industrial Co.)
+Nmap scan report for 192.168.1.143
+Host is up (0.075s latency).
+MAC Address: 3C:E0:72:E5:79:89 (Unknown)
+Nmap done: 256 IP addresses (7 hosts up) scanned in 5.12 seconds
