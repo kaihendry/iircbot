@@ -10,8 +10,8 @@ lookup() {
 
 if [ "$*" ]; then
     if ! lookup "$*"; then
-        echo "Jeg ved ikke noget om $*."
+        echo "I know nothing about $*."
     fi
 else
-    echo "Men hvad skal jeg forklare?"
-fi 
+     echo "Explain what?"
+fi
