@@ -1,26 +1,31 @@
-#cat /var/log/freeradius/radacct/49.128.60.116/detail-$(date +%Y%m%d) | while read -r foo
-tail -f /var/log/freeradius/radacct/49.128.60.116/detail-$(date +%Y%m%d) | while read -r foo
+#!/bin/bash
+
+exec 1>>$HOME/irc/irc.freenode.net/#hackerspacesg/in
+
+tail -f /var/log/freeradius/radacct/49.128.60.116/detail-$(date +%Y%m%d) | \
+    while read field eq value;
 do
-case $foo in
-Framed-IP-Address*)
-	line="$(echo $foo | cut -d" " -f3)"
-	;;
-Acct-Status-Type*)
-	line="$line $(echo $foo | cut -d" " -f3)"
-	;;
-Calling-Station-Id*)
-	mac=$(sed -e 's/\(..\)\(..\)\.\(..\)\(..\)\.\(..\)\(..\)/\1:\2:\3:\4:\5:\6/' <<< $(echo $foo | cut -d" " -f3 | tr -d '"'))
-	desc=$(grep $mac presence.table)
-	if test "$desc"
-	then
-	line="$line $desc"
-	else
-	line="$line $mac"
-	fi
-	;;
-*)
-	;;
-esac
-test "$foo" || echo $line >> ~/irc/irc.freenode.net/#hackerspacesg/in
-#test "$foo" || echo $line
+
+    [ "$eq" != '=' ] && [ -n "$field" ] && continue;
+
+    value=$(sed -e 's/"//g' <<< "$value");
+
+    case "$field" in
+        Framed-IP-Address)
+            ip="$value";
+            ;;
+
+        Acct-Status-Type)
+            status="$value";
+            ;;
+
+        Calling-Station-Id)
+            mac=$(sed -re 's/([0-9A-Z]{2})/\1:/g; s/(:$|\.)//g' <<< "$value");
+            desc=$(sed -n "s/^$mac //p" presence.table)
+
+            [ -z "$desc" ] && desc="$mac";
+            ;;
+    esac
+
+    [ -z "$field" ] && echo "$ip $status $desc"
 done
