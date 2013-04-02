@@ -18,9 +18,7 @@ do
 
         Calling-Station-Id)
             mac=$(sed -re 's/([0-9A-Z]{2})/\1:/g; s/(:$|\.)//g' <<< "$value");
-            desc=$(sed -n "s/^$mac //p" presence.table)
-
-            [ -z "$desc" ] && desc="$mac";
+            desc=$(grep "^$mac" presence.table || echo "$mac")
             ;;
     esac
 
