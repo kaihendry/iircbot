@@ -1,28 +1,25 @@
 #!/bin/bash
 
-exec 1>>$HOME/irc/irc.freenode.net/#hackerspacesg/in
-
 tail -f /var/log/freeradius/radacct/49.128.60.116/detail-$(date +%Y%m%d) |
-while read field _ value;
+while read field _ value
 do
-    value=$(sed -e 's/"//g' <<< "$value");
+    value=$(echo "$value" | tr -d '"')
 
     case "$field" in
         Framed-IP-Address)
-            ip="$value";
+            ip="$value"
             ;;
 
         Acct-Status-Type)
-            status="$value";
+            status="$value"
             ;;
 
         Calling-Station-Id)
-            mac=$(sed -re 's/([0-9A-Z]{2})/\1:/g; s/(:$|\.)//g' <<< "$value");
-            desc=$(sed -n "s/^$mac //p" presence.table)
-
-            [ -z "$desc" ] && desc="$mac";
+            mac=$(sed -re 's/([0-9A-Z]{2})/\1:/g; s/(:$|\.)//g' <<< "$value")
+            desc=$(grep $mac presence.table)
+            test "$desc" || desc="$mac"
             ;;
     esac
 
-    [ "$field" ] || echo "$ip $status $desc"
+    test "$field" || echo "$ip $status $desc" >> ~/irc/irc.freenode.net/#hackerspacesg/in
 done
