@@ -24,5 +24,5 @@ do
             ;;
     esac
 
-    [ -z "$field" ] && echo "$ip $status $desc"
+    [ "$field" ] || echo "$ip $status $desc"
 done
