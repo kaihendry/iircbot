@@ -2,8 +2,8 @@
 
 exec 1>>$HOME/irc/irc.freenode.net/#hackerspacesg/in
 
-tail -f /var/log/freeradius/radacct/49.128.60.116/detail-$(date +%Y%m%d) | \
-    while read field eq value;
+tail -f /var/log/freeradius/radacct/49.128.60.116/detail-$(date +%Y%m%d) |
+while read field eq value;
 do
 
     [ "$eq" != '=' ] && [ -n "$field" ] && continue;
